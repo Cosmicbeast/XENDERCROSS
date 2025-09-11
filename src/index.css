@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 210 25% 97%;
+    --foreground: 213 31% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 31% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 31% 15%;
+
+    --primary: 210 100% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 213 31% 25%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 213 20% 45%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 213 31% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 210 100% 45%;
+
+    /* Status colors for metro system */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 100%;
+    
+    --critical: 0 84% 60%;
+    --critical-foreground: 0 0% 100%;
+    
+    /* Metro brand colors */
+    --metro-blue: 210 100% 45%;
+    --metro-blue-dark: 210 100% 35%;
+    --metro-gray: 213 31% 15%;
+    --metro-light: 210 25% 97%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 213 31% 8%;
+    --foreground: 210 25% 97%;
+
+    --card: 213 31% 12%;
+    --card-foreground: 210 25% 97%;
+
+    --popover: 213 31% 12%;
+    --popover-foreground: 210 25% 97%;
+
+    --primary: 210 100% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 25% 97%;
+
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 32% 17%;
+    --accent-foreground: 210 25% 97%;
+
+    --destructive: 0 85% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 210 100% 55%;
+
+    /* Dark mode status colors */
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 45 93% 57%;
+    --warning-foreground: 0 0% 100%;
+    
+    --critical: 0 84% 70%;
+    --critical-foreground: 0 0% 100%;
+    
+    /* Dark mode metro colors */
+    --metro-blue: 210 100% 55%;
+    --metro-blue-dark: 210 100% 45%;
+    --metro-gray: 210 25% 97%;
+    --metro-light: 213 31% 8%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
