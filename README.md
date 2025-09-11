@@ -1,73 +1,135 @@
-# Welcome to your Lovable project
+# XENDERCROSS - KMRL Docuzone
 
-## Project info
+**A centralized software solution for the Smart India Hackathon 2025 to tackle document overload and streamline asset management at Kochi Metro Rail Limited.**
 
-**URL**: https://lovable.dev/projects/e9f227cb-5702-4ccf-9067-d1016190ee9f
+---
 
-## How can I edit this code?
+## Table of Contents
+- [Project Overview](#project-overview)
+- [The Problem](#the-problem)
+- [The Solution: KMRL Docuzone](#the-solution-kmrl-docuzone)
+- [Key Features](#key-features)
+- [Screenshots](#screenshots)
+- [Technical Approach](#technical-approach)
+- [Impact and Benefits](#impact-and-benefits)
+- [Getting Started](#getting-started)
+- [Team](#team)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Project Overview
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e9f227cb-5702-4ccf-9067-d1016190ee9f) and start prompting.
+This project is a submission for the **Smart India Hackathon 2025**.
 
-Changes made via Lovable will be committed automatically to this repo.
+*   **Team Name:** XENDERCROSS
+*   **Problem Statement ID:** 25080
+*   **Problem Statement Title:** Document Overload at Kochi Metro Rail Limited
+*   **Theme:** Smart Automation
+*   **Category:** Software
 
-**Use your preferred IDE**
+## The Problem
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Kochi Metro Rail Limited (KMRL) faces significant challenges with document overload and inefficient asset management. [2] This leads to:
+*   **Slow Decision-Making:** Critical information is buried in emails, PDFs, and scattered files. [2]
+*   **Drained Productivity:** Staff spend hours skimming documents instead of performing core duties. [2]
+*   **Increased Risks:** Poorly tracked maintenance and buried regulatory updates expose KMRL to safety and audit failures. [2]
+*   **Higher Operational Costs:** Inefficiencies in document and asset handling jeopardize service reliability and increase costs. [2]
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## The Solution: KMRL Docuzone
 
-Follow these steps:
+We propose **KMRL Docuzone**, a centralized platform designed to streamline document management, asset tracking, and maintenance workflows. Our solution transforms operations at KMRL to be **Smarter, Faster, and Better**. [2] It provides a single source of truth for all operational data, from fault reports to personnel schedules.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Key Features
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+*   **Centralized Dashboard:** Real-time overview of total assets, active faults, maintenance schedules, and system availability.
+*   **Asset Management:** Monitor and manage all railway assets, from rolling stock to infrastructure.
+*   **Fault Reporting & Tracking:** A dedicated system to report, track, and resolve asset faults efficiently.
+*   **Maintenance Management:** Schedule, track, and manage all maintenance activities to ensure operational readiness.
+*   **Analytics & Reporting:** Generate detailed reports and gain insights from performance dashboards on system uptime, efficiency, and trends.
+*   **Personnel Management:** Manage staff schedules, assignments, and department distributions.
+*   **AI-Powered Document Hub:** Centralizes documents with intelligent search, AI-summarization, and automated workflows. [4, 6]
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Screenshots
 
-**Edit a file directly in GitHub**
+Here is a glimpse of the KMRL Docuzone user interface.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+#### **Main Dashboard**
+*Real-time overview of metro rail operations, including active faults and asset status.*
+![Main Dashboard](assets/dashboard-overview.png)
 
-**Use GitHub Codespaces**
+#### **Analytics Dashboard**
+*Performance insights and system metrics, including uptime, response time, and maintenance efficiency.*
+![Analytics Dashboard](assets/analytics-dashboard.png)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+#### **Asset Management**
+*Monitor and manage all railway assets with a complete asset registry.*
+![Asset Management](assets/asset-management.png)
 
-## What technologies are used for this project?
+#### **Fault Reports**
+*Manage and track all fault reports submitted in the system.*
+![Fault Reports](assets/fault-reports.png)
 
-This project is built with:
+#### **Maintenance Management**
+*Schedule and track all upcoming and in-progress maintenance activities.*
+![Maintenance Management](assets/maintenance-management.png)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+#### **Reports & Analytics**
+*Generate and manage operational reports for different categories like operations, maintenance, and safety.*
+![Reports and Analytics](assets/reports-analytics.png)
 
-## How can I deploy this project?
+#### **Personnel Management**
+*Manage staff schedules, department distribution, and shift assignments.*
+![Personnel Management](assets/personnel-management.png)
 
-Simply open [Lovable](https://lovable.dev/projects/e9f227cb-5702-4ccf-9067-d1016190ee9f) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## Technical Approach
 
-Yes, you can!
+Our technical strategy focuses on creating a scalable, secure, and user-friendly system that integrates seamlessly into the existing operational structure at KMRL. [3]
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+![Technical Workflow Diagram](assets/technical-approach.png) 
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Impact and Benefits
+
+Our solution is designed to create a significant positive impact on KMRL's operations by improving efficiency and reducing risks. [5]
+
+**Before Solution:**
+*   Delayed decision-making
+*   Lack of coordination
+*   Loss of critical knowledge
+*   Duplication of work
+
+**After Solution (Benefits):**
+*   **Quick access** to relevant information. [5]
+*   **Improved collaboration** between departments. [5]
+*   **Elimination of duplication** problems. [5]
+*   **Preservation and easy transfer** of knowledge. [5]
+*   **Systematic and tagged documentation** for easy retrieval. [5]
+
+![Document Management Solution Benefits Chart](assets/benefits-chart.png)
+
+## Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+
+*   (Add any prerequisites here, e.g., Node.js, Python)
+
+### Installation
+
+1.  Clone the repo
+    ```sh
+    git clone https://github.com/Cosmicbeast/XENDERCROSS.git
+    ```
+2.  (Add installation steps)
+
+### Usage
+
+(Add instructions on how to run the application)
+
+## Team
+
+*   **Team Name:** XENDERCROSS
