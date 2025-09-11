@@ -1,135 +1,168 @@
-# XENDERCROSS - KMRL Docuzone
+# 🚇 XENDERCROSS – KMRL Docuzone & Asset Management Dashboard  
 
-**A centralized software solution for the Smart India Hackathon 2025 to tackle document overload and streamline asset management at Kochi Metro Rail Limited.**
+*Transforming Ideas into Limitless Possibilities*  
 
----
-
-## Table of Contents
-- [Project Overview](#project-overview)
-- [The Problem](#the-problem)
-- [The Solution: KMRL Docuzone](#the-solution-kmrl-docuzone)
-- [Key Features](#key-features)
-- [Screenshots](#screenshots)
-- [Technical Approach](#technical-approach)
-- [Impact and Benefits](#impact-and-benefits)
-- [Getting Started](#getting-started)
-- [Team](#team)
+![Last Commit](https://img.shields.io/github/last-commit/Cosmicbeast/XENDERCROSS)
+![TypeScript](https://img.shields.io/github/languages/top/Cosmicbeast/XENDERCROSS?color=blue)
+![Languages](https://img.shields.io/github/languages/count/Cosmicbeast/XENDERCROSS?color=lightgrey)
 
 ---
 
-## Project Overview
+## ⚙️ Tech Stack  
 
-This project is a submission for the **Smart India Hackathon 2025**.
+Built with modern tools & technologies:  
 
-*   **Team Name:** XENDERCROSS
-*   **Problem Statement ID:** 25080
-*   **Problem Statement Title:** Document Overload at Kochi Metro Rail Limited
-*   **Theme:** Smart Automation
-*   **Category:** Software
-
-## The Problem
-
-Kochi Metro Rail Limited (KMRL) faces significant challenges with document overload and inefficient asset management. [2] This leads to:
-*   **Slow Decision-Making:** Critical information is buried in emails, PDFs, and scattered files. [2]
-*   **Drained Productivity:** Staff spend hours skimming documents instead of performing core duties. [2]
-*   **Increased Risks:** Poorly tracked maintenance and buried regulatory updates expose KMRL to safety and audit failures. [2]
-*   **Higher Operational Costs:** Inefficiencies in document and asset handling jeopardize service reliability and increase costs. [2]
-
-## The Solution: KMRL Docuzone
-
-We propose **KMRL Docuzone**, a centralized platform designed to streamline document management, asset tracking, and maintenance workflows. Our solution transforms operations at KMRL to be **Smarter, Faster, and Better**. [2] It provides a single source of truth for all operational data, from fault reports to personnel schedules.
-
-## Key Features
-
-*   **Centralized Dashboard:** Real-time overview of total assets, active faults, maintenance schedules, and system availability.
-*   **Asset Management:** Monitor and manage all railway assets, from rolling stock to infrastructure.
-*   **Fault Reporting & Tracking:** A dedicated system to report, track, and resolve asset faults efficiently.
-*   **Maintenance Management:** Schedule, track, and manage all maintenance activities to ensure operational readiness.
-*   **Analytics & Reporting:** Generate detailed reports and gain insights from performance dashboards on system uptime, efficiency, and trends.
-*   **Personnel Management:** Manage staff schedules, assignments, and department distributions.
-*   **AI-Powered Document Hub:** Centralizes documents with intelligent search, AI-summarization, and automated workflows. [4, 6]
+![JSON](https://img.shields.io/badge/-JSON-000000?logo=json&logoColor=white)
+![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown&logoColor=white)
+![npm](https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white)
+![Autoprefixer](https://img.shields.io/badge/-Autoprefixer-DD3735?logo=autoprefixer&logoColor=white)
+![PostCSS](https://img.shields.io/badge/-PostCSS-DD3A0A?logo=postcss&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
+![Zod](https://img.shields.io/badge/-Zod-3068B7?logo=zod&logoColor=white)
+![Vite](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white)
+![ESLint](https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white)
+![date-fns](https://img.shields.io/badge/-datefns-FF5A5F?logo=date-fns&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/-React%20Hook%20Form-EC5990?logo=reacthookform&logoColor=white)
 
 ---
 
-## Screenshots
+## 📌 Project Overview  
 
-Here is a glimpse of the KMRL Docuzone user interface.
+This repository contains the implementation of **KMRL Docuzone & Asset Management Dashboard**, a centralized software solution developed for **Smart India Hackathon 2025**.  
 
-#### **Main Dashboard**
-*Real-time overview of metro rail operations, including active faults and asset status.*
-![Main Dashboard](assets/dashboard-overview.png)
+**Problem Statement ID:** 25080  
+**Title:** Document Overload at Kochi Metro Rail Limited (KMRL)  
+**Theme:** Smart Automation  
+**Category:** Software  
+**Team:** XENDERCROSS  
 
-#### **Analytics Dashboard**
-*Performance insights and system metrics, including uptime, response time, and maintenance efficiency.*
-![Analytics Dashboard](assets/analytics-dashboard.png)
+KMRL currently faces a massive overload of critical documents (emails, PDFs, scans, bilingual files). This slows decision-making, increases operational costs, and introduces risks of non-compliance. Managers spend countless hours skimming lengthy files, leading to:  
 
-#### **Asset Management**
-*Monitor and manage all railway assets with a complete asset registry.*
-![Asset Management](assets/asset-management.png)
+- ⏳ Delayed decision-making  
+- ⚠️ Safety risks from hidden/overlooked updates  
+- 🔁 Duplication of work and data  
+- 📉 Productivity loss across departments  
+- ❌ Misplacement of critical knowledge when employees retire  
 
-#### **Fault Reports**
-*Manage and track all fault reports submitted in the system.*
-![Fault Reports](assets/fault-reports.png)
-
-#### **Maintenance Management**
-*Schedule and track all upcoming and in-progress maintenance activities.*
-![Maintenance Management](assets/maintenance-management.png)
-
-#### **Reports & Analytics**
-*Generate and manage operational reports for different categories like operations, maintenance, and safety.*
-![Reports and Analytics](assets/reports-analytics.png)
-
-#### **Personnel Management**
-*Manage staff schedules, department distribution, and shift assignments.*
-![Personnel Management](assets/personnel-management.png)
+Our solution, **Docuzone**, transforms document & asset management into a **Smarter, Faster, and Better** system.  
 
 ---
 
-## Technical Approach
+## ✨ Key Features  
 
-Our technical strategy focuses on creating a scalable, secure, and user-friendly system that integrates seamlessly into the existing operational structure at KMRL. [3]
+- 📊 **Centralized Dashboard** – Unified view of assets, documents, faults, and schedules.  
+- 📂 **Document Management** – Centralized storage, metadata tagging, and intelligent search.  
+- 🔄 **Workflow Automation** – Automatic routing, approval flows, and status tracking.  
+- 🛠️ **Asset Management** – Real-time tracking of rolling stock, stations, and infrastructure.  
+- ⚡ **Fault Reporting** – Dedicated system to log, monitor, and resolve issues faster.  
+- 📝 **Standardized Templates** – Consistent documentation formatting.  
+- 📅 **Maintenance Management** – Schedule and monitor preventive & corrective tasks.  
+- 🤝 **Personnel Management** – Staff schedules, assignments, and departmental roles.  
+- 📈 **Analytics & Reporting** – Detailed operational insights for better decision-making.  
+- 🔐 **Secure Access Control** – Role-based access to ensure data safety.  
 
-![Technical Workflow Diagram](assets/technical-approach.png) 
+---
 
-## Impact and Benefits
+## 🖼️ Screenshots  
 
-Our solution is designed to create a significant positive impact on KMRL's operations by improving efficiency and reducing risks. [5]
+<table>
+  <tr>
+    <td align="center">
+      <strong>Main Dashboard</strong><br>
+      <em>Real-time overview of metro operations.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/dashboard.jpg" alt="Main Dashboard" width="400">
+    </td>
+    <td align="center">
+      <strong>Analytics Dashboard</strong><br>
+      <em>Performance insights and system metrics.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/analytics.jpg" alt="Analytics Dashboard" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Asset Management</strong><br>
+      <em>Monitor and manage all railway assets.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/assest%20management.jpg" alt="Asset Management" width="400">
+    </td>
+    <td align="center">
+      <strong>Fault Reports</strong><br>
+      <em>Manage and track all submitted fault reports.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/faults-reports.jpg" alt="Fault Reports" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Maintenance Management</strong><br>
+      <em>Schedule and track maintenance activities.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/maintaince.jpg" alt="Maintenance Management" width="400">
+    </td>
+    <td align="center">
+      <strong>Reports & Analytics</strong><br>
+      <em>Generate and manage operational reports.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/reports.jpg" alt="Reports and Analytics" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Personnel Management</strong><br>
+      <em>Manage staff schedules and assignments.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/management.jpg" alt="Personnel Management" width="400">
+    </td>
+    <td align="center">
+      <strong>Settings</strong><br>
+      <em>Configure user profiles and system preferences.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/settings.jpg" alt="Settings" width="400">
+    </td>
+  </tr>
+</table>
 
-**Before Solution:**
-*   Delayed decision-making
-*   Lack of coordination
-*   Loss of critical knowledge
-*   Duplication of work
+---
 
-**After Solution (Benefits):**
-*   **Quick access** to relevant information. [5]
-*   **Improved collaboration** between departments. [5]
-*   **Elimination of duplication** problems. [5]
-*   **Preservation and easy transfer** of knowledge. [5]
-*   **Systematic and tagged documentation** for easy retrieval. [5]
+## 🚀 Impact & Benefits  
 
-![Document Management Solution Benefits Chart](assets/benefits-chart.png)
+- ✅ Faster decision-making with summarized insights  
+- ✅ Quick access to relevant documents and assets  
+- ✅ Improved cross-departmental collaboration  
+- ✅ Systematic and standardized documentation  
+- ✅ Knowledge preservation from retiring employees  
+- ✅ Elimination of duplication & misplacement risks  
+- ✅ Higher operational efficiency and reduced downtime  
 
-## Getting Started
+---
 
-To get a local copy up and running, follow these simple steps.
+## 📚 Research & References  
 
-### Prerequisites
+- [Impacts of unattended train operations on metro productivity](https://journals.sagepub.com/doi/abs/10.3141/2534-10)  
+- [Hidden roles of train drivers in metro automation](https://academic.oup.com/iwc/article-abstract/23/4/289/73656)  
+- [Human mobility datasets in complex metro systems](https://www.nature.com/articles/s41597-025-05416-8)  
+- [Job stress and efficiency in metro staff](https://www.cabidigitallibrary.org/doi/full/10.5555/20143260637)  
 
-*   (Add any prerequisites here, e.g., Node.js, Python)
+---
+---
 
-### Installation
+## 🌍 Live Demo  
 
-1.  Clone the repo
-    ```sh
-    git clone https://github.com/Cosmicbeast/XENDERCROSS.git
-    ```
-2.  (Add installation steps)
+Check out the deployed application here:  
 
-### Usage
+🔗 [**XENDERCROSS – Live Demo**](https://xendercross.vercel.app/)  
 
-(Add instructions on how to run the application)
+---
 
-## Team
+## 🛠️ Getting Started  
 
-*   **Team Name:** XENDERCROSS
+Follow these instructions to set up the project locally.  
+
+### ✅ Prerequisites  
+
+Make sure you have the following installed:  
+
+- [Node.js](https://nodejs.org/) (version 18 or higher)  
+- [npm](https://www.npmjs.com/) (comes with Node.js) or [pnpm](https://pnpm.io/) / [yarn](https://yarnpkg.com/)  
+
+Check versions:  
+```sh
+node -v
+npm -v
+
