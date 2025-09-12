@@ -6,8 +6,9 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
-    port: 8080,
+    host: "::",          // allow external access (needed for Replit)
+    port: 8080,          // run on port 8080
+    allowedHosts: "all", // let all domains connect (important for janeway.replit.dev)
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
