@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CalendarIcon, Upload } from "lucide-react";
+import { useState, useRef } from "react";
+import { CalendarIcon, Upload, X, FileText, AlertCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,9 +9,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+
+const API_BASE_URL = 'http://localhost:3001';
+
+interface UploadedFile {
+  file: File;
+  preview?: string;
+}
 
 export function FaultReportForm() {
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [reportData, setReportData] = useState({
+    title: "",
     assetId: "",
     subsystem: "",
     location: "",
@@ -30,10 +42,201 @@ export function FaultReportForm() {
     sparePartsRequired: false,
     sparePartsList: "",
     estimatedRepairTime: "",
-    reporterName: "",
+    reporter: "",
     supervisorNotified: false,
     escalationNeeded: false,
   });
+
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDraft, setIsDraft] = useState(false);
+
+  // Handle file upload
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    
+    // Validate file types
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    const validFiles: UploadedFile[] = [];
+    const errors: string[] = [];
+
+    files.forEach(file => {
+      if (!allowedTypes.includes(file.type)) {
+        errors.push(`File "${file.name}" has unsupported type. Only JPG, PNG, PDF, TXT, DOC, and DOCX files are allowed.`);
+        return;
+      }
+      
+      if (file.size > maxSize) {
+        errors.push(`File "${file.name}" is too large. Maximum size is 10MB.`);
+        return;
+      }
+      
+      const uploadedFile: UploadedFile = { file };
+      
+      // Create preview for images
+      if (file.type.startsWith('image/')) {
+        uploadedFile.preview = URL.createObjectURL(file);
+      }
+      
+      validFiles.push(uploadedFile);
+    });
+
+    if (errors.length > 0) {
+      toast({
+        title: "File Upload Error",
+        description: errors.join(' '),
+        variant: "destructive",
+      });
+    }
+
+    // Check total file limit (5 files max)
+    const totalFiles = uploadedFiles.length + validFiles.length;
+    if (totalFiles > 5) {
+      toast({
+        title: "Too Many Files",
+        description: "Maximum 5 files allowed per report.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadedFiles(prev => [...prev, ...validFiles]);
+    
+    // Clear the input
+    if (event.target) {
+      event.target.value = '';
+    }
+  };
+
+  // Remove file from upload list
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => {
+      const newFiles = [...prev];
+      // Revoke object URL for images
+      if (newFiles[index].preview) {
+        URL.revokeObjectURL(newFiles[index].preview!);
+      }
+      newFiles.splice(index, 1);
+      return newFiles;
+    });
+  };
+
+  // Validate form data
+  const validateForm = () => {
+    const errors: string[] = [];
+    
+    if (!reportData.title.trim()) errors.push('Title is required');
+    if (!reportData.description.trim()) errors.push('Description is required');
+    if (!reportData.reporter.trim()) errors.push('Reporter name is required');
+    if (!reportData.severity) errors.push('Severity is required');
+    if (!reportData.assetId.trim()) errors.push('Asset ID is required');
+    
+    return errors;
+  };
+
+  // Submit form
+  const handleSubmit = async (isDraftSubmission = false) => {
+    setIsSubmitting(true);
+    setIsDraft(isDraftSubmission);
+    
+    try {
+      // Validate form
+      const validationErrors = validateForm();
+      if (validationErrors.length > 0 && !isDraftSubmission) {
+        toast({
+          title: "Validation Error",
+          description: validationErrors.join(', '),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Prepare form data
+      const formData = new FormData();
+      
+      // Add all form fields
+      Object.entries(reportData).forEach(([key, value]) => {
+        if (value !== '' && value !== null && value !== undefined) {
+          formData.append(key, typeof value === 'boolean' ? value.toString() : value);
+        }
+      });
+      
+      // Add current date if not provided
+      if (!reportData.title && !isDraftSubmission) {
+        formData.set('title', `Fault Report - ${reportData.assetId} - ${new Date().toLocaleDateString()}`);
+      }
+      
+      formData.set('date', new Date().toISOString());
+      
+      // Add files
+      uploadedFiles.forEach(({ file }) => {
+        formData.append('files', file);
+      });
+      
+      // Submit to backend
+      const response = await fetch(`${API_BASE_URL}/api/faults`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to submit fault report');
+      }
+      
+      // Success
+      toast({
+        title: isDraftSubmission ? "Draft Saved" : "Report Submitted",
+        description: isDraftSubmission ? "Your fault report draft has been saved." : "Your fault report has been submitted successfully.",
+      });
+      
+      // Reset form
+      setReportData({
+        title: "",
+        assetId: "",
+        subsystem: "",
+        location: "",
+        category: "",
+        severity: "",
+        description: "",
+        observedCause: "",
+        diagnosticSteps: false,
+        rootCauseKnown: false,
+        rootCauseDetails: "",
+        workaround: "",
+        temporaryFix: false,
+        temporaryFixDetails: "",
+        passengerSafety: false,
+        staffSafety: false,
+        sparePartsRequired: false,
+        sparePartsList: "",
+        estimatedRepairTime: "",
+        reporter: "",
+        supervisorNotified: false,
+        escalationNeeded: false,
+      });
+      
+      // Clean up file previews and reset files
+      uploadedFiles.forEach(({ preview }) => {
+        if (preview) URL.revokeObjectURL(preview);
+      });
+      setUploadedFiles([]);
+      
+    } catch (error) {
+      console.error('Error submitting fault report:', error);
+      toast({
+        title: "Submission Error",
+        description: error instanceof Error ? error.message : "Failed to submit fault report. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+      setIsDraft(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -45,14 +248,24 @@ export function FaultReportForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Fault Report Title</Label>
+            <Input
+              id="title"
+              placeholder="Brief title for the fault report"
+              value={reportData.title}
+              onChange={(e) => setReportData({ ...reportData, title: e.target.value })}
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="assetId">Asset ID / Trainset Number</Label>
+              <Label htmlFor="assetId">Asset ID / Trainset Number *</Label>
               <Input
                 id="assetId"
                 placeholder="e.g., Unit 407"
                 value={reportData.assetId}
                 onChange={(e) => setReportData({ ...reportData, assetId: e.target.value })}
+                required
               />
             </div>
             <div className="space-y-2">
@@ -139,12 +352,13 @@ export function FaultReportForm() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Fault Description</Label>
+            <Label htmlFor="description">Fault Description *</Label>
             <Textarea
               id="description"
               placeholder="Describe the fault in detail..."
               value={reportData.description}
               onChange={(e) => setReportData({ ...reportData, description: e.target.value })}
+              required
             />
           </div>
           <div className="space-y-2">
@@ -319,12 +533,13 @@ export function FaultReportForm() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="reporterName">Reporter Name / ID</Label>
+            <Label htmlFor="reporter">Reporter Name / ID *</Label>
             <Input
-              id="reporterName"
+              id="reporter"
               placeholder="Enter your name and employee ID"
-              value={reportData.reporterName}
-              onChange={(e) => setReportData({ ...reportData, reporterName: e.target.value })}
+              value={reportData.reporter}
+              onChange={(e) => setReportData({ ...reportData, reporter: e.target.value })}
+              required
             />
           </div>
           <div className="flex items-center space-x-2">
@@ -361,18 +576,92 @@ export function FaultReportForm() {
           <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
             <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
             <p className="mt-2 text-sm text-muted-foreground">
-              Drag and drop files here, or click to select files
+              Upload photos, videos, or documents (JPG, PNG, PDF, TXT, DOC, DOCX)
             </p>
-            <Button variant="outline" className="mt-4">
+            <p className="text-xs text-muted-foreground">
+              Max 5 files, 10MB each
+            </p>
+            <Button 
+              variant="outline" 
+              className="mt-4"
+              onClick={() => fileInputRef.current?.click()}
+              type="button"
+            >
               Choose Files
             </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".jpg,.jpeg,.png,.pdf,.txt,.doc,.docx"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
           </div>
+          
+          {/* File List */}
+          {uploadedFiles.length > 0 && (
+            <div className="mt-4 space-y-2">
+              <Label>Selected Files ({uploadedFiles.length}/5)</Label>
+              {uploadedFiles.map((uploadedFile, index) => (
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <FileText className="h-4 w-4" />
+                    <div>
+                      <p className="text-sm font-medium">{uploadedFile.file.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeFile(index)}
+                    type="button"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
       <div className="flex justify-end gap-4">
-        <Button variant="outline">Save as Draft</Button>
-        <Button>Submit Report</Button>
+        <Button 
+          variant="outline"
+          onClick={() => handleSubmit(true)}
+          disabled={isSubmitting}
+          type="button"
+        >
+          {isDraft && isSubmitting ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span>Saving Draft...</span>
+            </div>
+          ) : (
+            'Save as Draft'
+          )}
+        </Button>
+        <Button 
+          onClick={() => handleSubmit(false)}
+          disabled={isSubmitting}
+          type="button"
+        >
+          {!isDraft && isSubmitting ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span>Submitting...</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="h-4 w-4" />
+              <span>Submit Report</span>
+            </div>
+          )}
+        </Button>
       </div>
     </div>
   );

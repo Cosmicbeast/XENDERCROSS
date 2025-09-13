@@ -1,4 +1,4 @@
-# 🚇 XENDERCROSS – KMRL Docuzone & Asset Management Dashboard  
+# 🚇 XENDERCROSS – Complete Full-Stack Fault Reporting System
 
 *Transforming Ideas into Limitless Possibilities*  
 
@@ -8,64 +8,230 @@
 
 ---
 
+## 🏗️ **Full-Stack Architecture**
+
+**Frontend:** React 18 + TypeScript + Vite + Shadcn/ui  
+**Backend:** Node.js + Express + TypeScript + SQLite  
+**Features:** File uploads, real-time validation, secure API, responsive design
+
+---
+
 ## ⚙️ Tech Stack  
 
-Built with modern tools & technologies:  
-
-![JSON](https://img.shields.io/badge/-JSON-000000?logo=json&logoColor=white)
-![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown&logoColor=white)
-![npm](https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white)
-![Autoprefixer](https://img.shields.io/badge/-Autoprefixer-DD3735?logo=autoprefixer&logoColor=white)
-![PostCSS](https://img.shields.io/badge/-PostCSS-DD3A0A?logo=postcss&logoColor=white)
-![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)
+### **Frontend Technologies**
 ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
-![Zod](https://img.shields.io/badge/-Zod-3068B7?logo=zod&logoColor=white)
 ![Vite](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/-Tailwind%20CSS-38B2AC?logo=tailwind-css&logoColor=white)
 ![ESLint](https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white)
-![date-fns](https://img.shields.io/badge/-datefns-FF5A5F?logo=date-fns&logoColor=white)
-![React Hook Form](https://img.shields.io/badge/-React%20Hook%20Form-EC5990?logo=reacthookform&logoColor=white)
+
+### **Backend Technologies**
+![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white)
+![SQLite](https://img.shields.io/badge/-SQLite-003B57?logo=sqlite&logoColor=white)
+![Multer](https://img.shields.io/badge/-Multer-FF6B35?logo=multer&logoColor=white)
 
 ---
 
-## 📌 Project Overview  
+## 🚀 **Quick Start Guide**
 
-This repository contains the implementation of **KMRL Docuzone & Asset Management Dashboard**, a centralized software solution developed for **Smart India Hackathon 2025**.  
+### **Prerequisites**
+- Node.js 18+ installed
+- npm or yarn package manager
 
-**Problem Statement ID:** 25080  
-**Title:** Document Overload at Kochi Metro Rail Limited (KMRL)  
-**Theme:** Smart Automation  
-**Category:** Software  
-**Team:** XENDERCROSS  
+### **1. Install All Dependencies**
+```bash
+# Install frontend and backend dependencies together
+npm run install:all
 
-KMRL currently faces a massive overload of critical documents (emails, PDFs, scans, bilingual files). This slows decision-making, increases operational costs, and introduces risks of non-compliance. Managers spend countless hours skimming lengthy files, leading to:  
+# Or install separately:
+npm install                    # Frontend dependencies
+cd backend && npm install      # Backend dependencies
+```
 
-- ⏳ Delayed decision-making  
-- ⚠️ Safety risks from hidden/overlooked updates  
-- 🔁 Duplication of work and data  
-- 📉 Productivity loss across departments  
-- ❌ Misplacement of critical knowledge when employees retire  
+### **2. Start Development Environment**
+```bash
+# Start both frontend and backend together (recommended)
+npm run dev:full
 
-Our solution, **Docuzone**, transforms document & asset management into a **Smarter, Faster, and Better** system.  
+# Or start individually:
+npm run dev                    # Frontend only → http://localhost:5173
+npm run backend:dev            # Backend only → http://localhost:3001
+```
 
----
-
-## ✨ Key Features  
-
-- 📊 **Centralized Dashboard** – Unified view of assets, documents, faults, and schedules.  
-- 📂 **Document Management** – Centralized storage, metadata tagging, and intelligent search.  
-- 🔄 **Workflow Automation** – Automatic routing, approval flows, and status tracking.  
-- 🛠️ **Asset Management** – Real-time tracking of rolling stock, stations, and infrastructure.  
-- ⚡ **Fault Reporting** – Dedicated system to log, monitor, and resolve issues faster.  
-- 📝 **Standardized Templates** – Consistent documentation formatting.  
-- 📅 **Maintenance Management** – Schedule and monitor preventive & corrective tasks.  
-- 🤝 **Personnel Management** – Staff schedules, assignments, and departmental roles.  
-- 📈 **Analytics & Reporting** – Detailed operational insights for better decision-making.  
-- 🔐 **Secure Access Control** – Role-based access to ensure data safety.  
+### **3. Verify Setup**
+- **Frontend:** http://localhost:5173
+- **Backend Health:** http://localhost:3001/health
+- **API Docs:** http://localhost:3001/api/docs
 
 ---
 
-## 🖼️ Screenshots  
+## 🎯 **Key Features Implemented**
+
+### **Frontend Features**
+- ✅ **Interactive Fault Report Form** - Comprehensive form with all required fields
+- ✅ **File Upload Interface** - Drag & drop support with preview
+- ✅ **Form Validation** - Real-time validation with error messages
+- ✅ **Toast Notifications** - User feedback for actions
+- ✅ **Responsive Design** - Works on desktop and mobile
+- ✅ **Multi-language Support** - Internationalization ready
+- ✅ **Dashboard Interface** - Overview and navigation
+- ✅ **Loading States** - Progress indicators during operations
+
+### **Backend Features**
+- ✅ **RESTful API** - Complete CRUD operations for fault reports
+- ✅ **File Upload System** - Multi-file upload with validation
+- ✅ **SQLite Database** - Lightweight, serverless database
+- ✅ **Security Middleware** - Rate limiting, CORS, Helmet protection
+- ✅ **File Validation** - Type, size, and security checks
+- ✅ **Error Handling** - Comprehensive error management
+- ✅ **API Documentation** - Built-in documentation endpoint
+- ✅ **Search & Filtering** - Advanced query capabilities
+
+---
+
+## 📦 **Project Structure**
+
+```
+XENDERCROSS/
+├── 📁 src/                     # Frontend React Application
+│   ├── components/             # React components
+│   │   ├── FaultReportForm.tsx # ⭐ Main fault reporting form
+│   │   └── ui/                 # Shadcn/ui components
+│   ├── pages/                  # Application pages
+│   ├── hooks/                  # Custom React hooks
+│   ├── contexts/               # React contexts
+│   └── lib/                    # Utility functions
+├── 📁 backend/                 # Backend API Server
+│   ├── src/
+│   │   ├── models/             # Database models & schema
+│   │   ├── routes/             # API endpoints
+│   │   ├── middleware/         # Express middleware
+│   │   └── server.ts           # Main server file
+│   ├── uploads/                # File storage
+│   └── package.json            # Backend dependencies
+├── 📁 public/                  # Static assets
+└── package.json                # Frontend + combined scripts
+```
+
+---
+
+## 📱 **Available Scripts**
+
+### **Full-Stack Development**
+- `npm run dev:full` - Start both frontend and backend
+- `npm run install:all` - Install all dependencies
+- `npm run build:all` - Build both for production
+
+### **Frontend Scripts**
+- `npm run dev` - Start frontend development server
+- `npm run build` - Build frontend for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### **Backend Scripts**
+- `npm run backend:dev` - Start backend development server
+- `npm run backend:install` - Install backend dependencies
+- `npm run backend:build` - Build backend TypeScript
+- `npm run backend:start` - Start production backend
+
+---
+
+## 🔌 **API Endpoints**
+
+### **Fault Management**
+- `POST /api/faults` - Create fault report with files
+- `GET /api/faults` - List all fault reports (with pagination/search)
+- `GET /api/faults/:id` - Get specific fault report
+- `PUT /api/faults/:id` - Update fault report
+- `DELETE /api/faults/:id` - Delete fault report
+
+### **File Operations**
+- `GET /uploads/:filename` - Serve uploaded files
+- `GET /uploads/fault/:faultId/:filename` - Serve files with validation
+
+### **Utility**
+- `GET /health` - API health check
+- `GET /api/docs` - API documentation
+- `GET /api/faults/stats/summary` - Fault statistics
+
+---
+
+## 📤 **File Upload System**
+
+### **Supported File Types**
+- **Images:** JPG, JPEG, PNG
+- **Documents:** PDF, TXT, DOC, DOCX
+- **Limits:** 10MB per file, 5 files max per report
+
+### **Security Features**
+- File type validation (MIME type + extension)
+- File size limits (10MB per file)
+- Unique file naming (timestamp + UUID)
+- Secure storage in uploads/ directory
+
+---
+
+## 🗄️ **Database Schema**
+
+### **Faults Table**
+Complete fault report data with 25+ fields including:
+- Basic info (title, description, reporter, severity, assetId)
+- Diagnostic data (observedCause, diagnosticSteps, rootCause)
+- Safety info (passengerSafety, staffSafety)
+- Resources (sparePartsRequired, estimatedRepairTime)
+- Status tracking (supervisorNotified, escalationNeeded)
+
+### **Fault Files Table**
+File metadata and relationships:
+- File information (fileName, originalName, mimeType, size)
+- Relationships (faultId foreign key)
+- Timestamps and file paths
+
+---
+
+## 📊 **API Examples**
+
+### **Create Fault Report with Files**
+```bash
+curl -X POST http://localhost:3001/api/faults \
+  -F "title=Traction System Fault" \
+  -F "description=Converter overheating" \
+  -F "reporter=John Doe - EMP001" \
+  -F "severity=major" \
+  -F "assetId=Unit 407" \
+  -F "subsystem=traction" \
+  -F "files=@fault_photo.jpg" \
+  -F "files=@diagnostic_report.pdf"
+```
+
+### **Get All Faults**
+```bash
+curl "http://localhost:3001/api/faults?limit=20&search=traction"
+```
+
+---
+
+## 🔒 **Security Features**
+
+- **Rate Limiting:** 100 API requests/15min, 20 uploads/15min
+- **CORS Protection:** Configurable cross-origin policies
+- **File Validation:** MIME type and extension checking
+- **Input Sanitization:** Request validation and sanitization
+- **Security Headers:** Helmet middleware for protection
+- **Error Handling:** Safe error messages without sensitive data
+
+---
+
+## 📚 **Documentation**
+
+- **[Complete Project Guide](./COMPLETE_PROJECT_GUIDE.md)** - Comprehensive documentation
+- **[Backend README](./backend/README.md)** - Backend-specific documentation  
+- **[API Examples](./backend/API_EXAMPLES.md)** - API usage examples with curl commands
+
+---
+
+## 🖼️ **Screenshots**
 
 <table>
   <tr>
@@ -75,18 +241,6 @@ Our solution, **Docuzone**, transforms document & asset management into a **Smar
       <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/dashboard.jpg" alt="Main Dashboard" width="400">
     </td>
     <td align="center">
-      <strong>Analytics Dashboard</strong><br>
-      <em>Performance insights and system metrics.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/analytics.jpg" alt="Analytics Dashboard" width="400">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <strong>Asset Management</strong><br>
-      <em>Monitor and manage all railway assets.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/assest%20management.jpg" alt="Asset Management" width="400">
-    </td>
-    <td align="center">
       <strong>Fault Reports</strong><br>
       <em>Manage and track all submitted fault reports.</em><br><br>
       <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/faults-reports.jpg" alt="Fault Reports" width="400">
@@ -94,55 +248,79 @@ Our solution, **Docuzone**, transforms document & asset management into a **Smar
   </tr>
   <tr>
     <td align="center">
-      <strong>Maintenance Management</strong><br>
-      <em>Schedule and track maintenance activities.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/maintaince.jpg" alt="Maintenance Management" width="400">
+      <strong>Analytics Dashboard</strong><br>
+      <em>Performance insights and system metrics.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/analytics.jpg" alt="Analytics Dashboard" width="400">
     </td>
     <td align="center">
-      <strong>Reports & Analytics</strong><br>
-      <em>Generate and manage operational reports.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/reports.jpg" alt="Reports and Analytics" width="400">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <strong>Personnel Management</strong><br>
-      <em>Manage staff schedules and assignments.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/management.jpg" alt="Personnel Management" width="400">
-    </td>
-    <td align="center">
-      <strong>Settings</strong><br>
-      <em>Configure user profiles and system preferences.</em><br><br>
-      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/settings.jpg" alt="Settings" width="400">
+      <strong>Asset Management</strong><br>
+      <em>Monitor and manage all railway assets.</em><br><br>
+      <img src="https://raw.githubusercontent.com/Cosmicbeast/XENDERCROSS/main/images/assest%20management.jpg" alt="Asset Management" width="400">
     </td>
   </tr>
 </table>
 
 ---
 
-## 🚀 Impact & Benefits  
+## 🚢 **Production Ready**
 
-- ✅ Faster decision-making with summarized insights  
-- ✅ Quick access to relevant documents and assets  
-- ✅ Improved cross-departmental collaboration  
-- ✅ Systematic and standardized documentation  
-- ✅ Knowledge preservation from retiring employees  
-- ✅ Elimination of duplication & misplacement risks  
-- ✅ Higher operational efficiency and reduced downtime  
+The application includes:
+- Environment configuration
+- Production build scripts
+- Security best practices
+- Error handling and logging
+- Performance optimizations
+- CORS configuration for production domains
+
+### **Deployment Checklist**
+- [ ] Install dependencies: `npm run install:all`
+- [ ] Test development: `npm run dev:full`
+- [ ] Build for production: `npm run build:all`
+- [ ] Set production environment variables
+- [ ] Configure web server for frontend static files
+- [ ] Start backend production server
+- [ ] Test file upload functionality
+- [ ] Verify database permissions
 
 ---
 
-## 📚 Research & References  
+## 🛠️ **Troubleshooting**
 
-- [Impacts of unattended train operations on metro productivity](https://journals.sagepub.com/doi/abs/10.3141/2534-10)  
-- [Hidden roles of train drivers in metro automation](https://academic.oup.com/iwc/article-abstract/23/4/289/73656)  
-- [Human mobility datasets in complex metro systems](https://www.nature.com/articles/s41597-025-05416-8)  
-- [Job stress and efficiency in metro staff](https://www.cabidigitallibrary.org/doi/full/10.5555/20143260637)  
+### **Common Issues & Solutions**
+
+1. **Port Conflicts**
+   - Check ports 3001 (backend) and 5173 (frontend)
+   - Kill existing processes: `netstat -ano | findstr :3001`
+
+2. **CORS Errors**
+   - Verify backend CORS configuration
+   - Check frontend API_BASE_URL points to correct backend
+
+3. **File Upload Issues**
+   - Check file types are supported (JPG, PNG, PDF, TXT, DOC, DOCX)
+   - Verify file size under 10MB limit
+   - Ensure uploads/ directory exists and is writable
+
+4. **Database Issues**
+   - Check SQLite file permissions
+   - Verify no locks on database file
+   - Ensure proper foreign key relationships
 
 ---
+
+## 📌 **Original Project Context**
+
+This repository contains the implementation of **KMRL Docuzone & Asset Management Dashboard**, a centralized software solution developed for **Smart India Hackathon 2025**.  
+
+**Problem Statement ID:** 25080  
+**Title:** Document Overload at Kochi Metro Rail Limited (KMRL)  
+**Theme:** Smart Automation  
+**Category:** Software  
+**Team:** XENDERCROSS  
+
 ---
 
-## 🌍 Live Demo  
+## 🌍 **Live Demo**
 
 Check out the deployed application here:  
 
@@ -150,19 +328,20 @@ Check out the deployed application here:
 
 ---
 
-## 🛠️ Getting Started  
+## 🤝 **Contributing**
 
-Follow these instructions to set up the project locally.  
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`) 
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### ✅ Prerequisites  
+---
 
-Make sure you have the following installed:  
+## 📄 **License**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)  
-- [npm](https://www.npmjs.com/) (comes with Node.js) or [pnpm](https://pnpm.io/) / [yarn](https://yarnpkg.com/)  
+This project is licensed under the ISC License.
 
-Check versions:  
-```sh
-node -v
-npm -v
+---
 
+**The system is ready for immediate use with full frontend-backend integration!** 🎉
