@@ -223,10 +223,27 @@ export function FaultReportForm() {
       
       formData.set('date', new Date().toISOString());
       
-      // Add files
-      uploadedFiles.forEach(({ file }) => {
-        formData.append('files', file);
-      });
+      // Convert files to base64 for simple storage
+      if (uploadedFiles.length > 0) {
+        const filePromises = uploadedFiles.map(({ file }) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve({
+                name: file.name,
+                originalName: file.name,
+                size: file.size,
+                mimeType: file.type,
+                url: reader.result // Keep full data URL for viewing
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+        
+        const files = await Promise.all(filePromises);
+        formData.append('files', JSON.stringify(files));
+      }
       
       // Submit to backend
       const response = await fetch(`${API_BASE_URL}/api/faults`, {

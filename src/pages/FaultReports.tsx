@@ -142,6 +142,28 @@ export default function FaultReports() {
                 <p className="text-muted-foreground">{selectedFault.observedCause}</p>
               </div>
             )}
+            {selectedFault.files && selectedFault.files.length > 0 && (
+              <div>
+                <p className="font-medium mb-2">Attached Files</p>
+                <div className="space-y-2">
+                  {selectedFault.files.map((file: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between p-2 border rounded">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-medium">{file.originalName || file.name || `File ${index + 1}`}</span>
+                        <span className="text-xs text-muted-foreground">({(file.size / 1024).toFixed(1)} KB)</span>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => window.open(file.url || file.path || `data:${file.mimeType};base64,${file.data}`, '_blank')}
+                      >
+                        View
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

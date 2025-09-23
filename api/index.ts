@@ -28,7 +28,16 @@ export default function handler(req: any, res: any) {
         location: 'Aluva Depot',
         date: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        files: [
+          {
+            name: 'traction_fault_photo.jpg',
+            originalName: 'traction_fault_photo.jpg',
+            size: 245760,
+            mimeType: 'image/jpeg',
+            url: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k='
+          }
+        ]
       },
       {
         id: '2',
@@ -40,7 +49,16 @@ export default function handler(req: any, res: any) {
         location: 'Kaloor Station',
         date: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        files: [
+          {
+            name: 'door_sensor_report.pdf',
+            originalName: 'door_sensor_report.pdf',
+            size: 156432,
+            mimeType: 'application/pdf',
+            url: 'data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsO8CjIgMCBvYmoKPDwKL0xlbmd0aCAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQo+PgpzdHJlYW0KeJxLy8wpTVWwUsjIzEvLTFGwVUjOzytJzSvRy87PS9VLzk/VzyrNTc0rzi9KycxLt1Uw1DM0MjBQsOZiAABAAP//AwBQSwECHgAUAAAACABmAGFQAAAAFgAAABQAGAAAAAAAAAAAAKSBAAAAAGRvY3VtZW50LnBkZlVUBQADUEsBAh4AFAAAAAgAZgBhUAAAABYAAAAUABgAAAAAAAAAAACkgQAAAGRvY3VtZW50LnBkZlVUBQADUEsFBgAAAAACAAIAqgAAAF4AAAAAAA=='
+          }
+        ]
       }
     ];
     
@@ -51,6 +69,13 @@ export default function handler(req: any, res: any) {
     
     // Create fault
     if (url?.includes('/api/faults') && method === 'POST') {
+      let files = [];
+      try {
+        files = req.body?.files ? JSON.parse(req.body.files) : [];
+      } catch (e) {
+        files = [];
+      }
+      
       const fault = {
         id: String(Date.now()),
         title: req.body?.title || 'New Fault Report',
@@ -61,9 +86,10 @@ export default function handler(req: any, res: any) {
         location: req.body?.location || 'Unknown',
         date: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        files: files
       };
-      return res.status(201).json({ success: true, data: { fault, files: [] } });
+      return res.status(201).json({ success: true, data: { fault, files: fault.files } });
     }
     
     // Get single fault
