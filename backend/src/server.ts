@@ -52,10 +52,12 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Range']
 };
 
 app.use(cors(corsOptions));
+// Explicitly handle preflight for SPA fetches
+app.options('*', cors(corsOptions));
 
 // Compression middleware
 app.use(compression());

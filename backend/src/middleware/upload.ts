@@ -2,12 +2,12 @@ import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
+import type { Request, Response, NextFunction } from 'express';
+import * as Express from 'express';
+import { getUploadsDir } from '../utils/paths';
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// Ensure uploads directory exists using stable path
+const uploadsDir = getUploadsDir();
 
 // Allowed file types and their MIME types
 const ALLOWED_MIME_TYPES = {
@@ -37,7 +37,19 @@ const storage = multer.diskStorage({
 });
 
 // File filter function
-const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+type UploadedFile = {
+  path: string;
+  mimetype: string;
+  originalname: string;
+  size: number;
+  filename?: string;
+};
+
+const fileFilter = (
+  req: Request,
+  file: { mimetype: string; originalname: string },
+  cb: multer.FileFilterCallback
+) => {
   // Check if file type is allowed
   if (!ALLOWED_MIME_TYPES[file.mimetype as keyof typeof ALLOWED_MIME_TYPES]) {
     cb(new Error(`File type ${file.mimetype} is not allowed. Only JPG, PNG, PDF, TXT, DOC, and DOCX files are accepted.`));
@@ -67,7 +79,7 @@ export const uploadMiddleware = multer({
 });
 
 // Error handler for multer errors
-export const handleUploadError = (error: any, req: Express.Request, res: Express.Response, next: Function) => {
+export const handleUploadError = (error: unknown, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof multer.MulterError) {
     switch (error.code) {
       case 'LIMIT_FILE_SIZE':
@@ -88,36 +100,37 @@ export const handleUploadError = (error: any, req: Express.Request, res: Express
       default:
         return res.status(400).json({
           success: false,
-          message: `Upload error: ${error.message}`
+          message: `Upload error: ${typeof (error as { message?: string }).message === 'string' ? (error as { message: string }).message : 'Unknown error'}`
         });
     }
   }
 
-  if (error.message.includes('not allowed')) {
+  if (typeof (error as { message?: string }).message === 'string' && (error as { message: string }).message.includes('not allowed')) {
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: (error as { message: string }).message
     });
   }
 
-  next(error);
+  return next(error as Error);
 };
 
 // Helper function to clean up uploaded files in case of error
-export const cleanupUploadedFiles = (files: Express.Multer.File[]) => {
+export const cleanupUploadedFiles = (files: UploadedFile[]) => {
   files.forEach(file => {
     try {
       if (fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);
       }
-    } catch (error) {
-      console.error(`Failed to delete file ${file.path}:`, error);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`Failed to delete file ${file.path}:`, message);
     }
   });
 };
 
 // Validate uploaded files
-export const validateFiles = (files: Express.Multer.File[]): { isValid: boolean; errors: string[] } => {
+export const validateFiles = (files: UploadedFile[]): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
   if (!files || files.length === 0) {

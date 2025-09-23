@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { getDatabase } from '../models/jsonDatabase';
+import { getUploadFilePath } from '../utils/paths';
 
 const router = express.Router();
 const db = getDatabase();
@@ -36,7 +37,7 @@ router.get('/:filename', (req, res) => {
       });
     }
 
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = getUploadFilePath(filename);
     
     // Check if file exists on filesystem
     if (!fs.existsSync(filePath)) {
@@ -198,7 +199,7 @@ router.get('/info/:filename', (req, res) => {
     }
 
     // Check if file exists on filesystem
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = getUploadFilePath(filename);
     const fileExists = fs.existsSync(filePath);
 
     let fileStats = null;
@@ -277,7 +278,7 @@ router.delete('/:filename', (req, res) => {
     }
 
     // Delete from filesystem
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = getUploadFilePath(filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
