@@ -43,9 +43,10 @@ const validateFaultData = (data: any): { isValid: boolean; errors: string[] } =>
 };
 
 // POST /api/faults - Create a new fault report
-router.post('/', uploadMiddleware.array('files', 5), (req, res, next) => {
+// Accept any file field name to be resilient in local/dev environments
+router.post('/', uploadMiddleware.any(), (req, res, next) => {
   try {
-    const files = req.files as Express.Multer.File[] || [];
+    const files = Array.isArray(req.files) ? (req.files as Express.Multer.File[]) : [];
     
     // Validate fault data
     const { isValid, errors } = validateFaultData(req.body);

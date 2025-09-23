@@ -5,6 +5,8 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import dotenv from 'dotenv';
+import { getUploadsDir } from './utils/paths';
+import type { ErrorRequestHandler } from 'express';
 
 // Import routes
 import faultsRouter from './routes/faults';
@@ -14,7 +16,7 @@ import uploadsRouter from './routes/uploads';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env['PORT'] || 3001);
 
 // Security middleware
 app.use(helmet({
@@ -46,9 +48,9 @@ app.use('/uploads/', uploadLimiter);
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || 'http://localhost:5173'
-    : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+  origin: process.env['NODE_ENV'] === 'production' 
+    ? (process.env['FRONTEND_URL'] || 'http://localhost:5173')
+    : true, // allow all origins in development to avoid "Failed to fetch" from preflight
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -61,6 +63,17 @@ app.options('*', cors(corsOptions));
 
 // Compression middleware
 app.use(compression());
+// Request logging (dev only)
+if (process.env['NODE_ENV'] !== 'production') {
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const durationMs = Date.now() - start;
+      console.log(`${req.method} ${req.originalUrl} -> ${res.statusCode} ${durationMs}ms`);
+    });
+    next();
+  });
+}
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -79,6 +92,8 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/faults', faultsRouter);
 app.use('/uploads', uploadsRouter);
+// Also expose static files from uploads for local usage
+app.use('/uploads', express.static(getUploadsDir()))
 
 // API documentation endpoint
 app.get('/api/docs', (req, res) => {
@@ -191,18 +206,20 @@ app.use('/api/*', (req, res) => {
 });
 
 // Global error handler
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error('Global error handler:', err);
 
   // Handle specific error types
-  if (err.type === 'entity.parse.failed') {
+  type ErrorLike = { type?: string; status?: number; message?: string; stack?: string };
+  const anyErr: ErrorLike = err as ErrorLike;
+  if (anyErr.type === 'entity.parse.failed') {
     return res.status(400).json({
       success: false,
       message: 'Invalid JSON in request body'
     });
   }
 
-  if (err.type === 'entity.too.large') {
+  if (anyErr.type === 'entity.too.large') {
     return res.status(413).json({
       success: false,
       message: 'Request entity too large'
@@ -210,21 +227,23 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   }
 
   // Default error response
-  res.status(err.status || 500).json({
+  res.status(anyErr.status || 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    message: anyErr.message || 'Internal Server Error',
+    ...(process.env['NODE_ENV'] === 'development' && { stack: anyErr.stack })
   });
-});
+  return;
+};
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 XENDERCROSS Backend API Server running on port ${PORT}`);
   console.log(`📱 Health check: http://localhost:${PORT}/health`);
   console.log(`📚 API docs: http://localhost:${PORT}/api/docs`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌍 Environment: ${process.env['NODE_ENV'] || 'development'}`);
   
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env['NODE_ENV'] !== 'production') {
     console.log(`🔧 Frontend CORS origin: ${corsOptions.origin}`);
   }
 });
