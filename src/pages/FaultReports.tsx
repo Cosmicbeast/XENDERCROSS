@@ -42,11 +42,12 @@ export default function FaultReports() {
     try {
       // Try multiple endpoints to see what works
       const endpoints = [
-        `${API_BASE_URL}/api/test`,
-        `${API_BASE_URL}/api/faults`,
-        `${API_BASE_URL}/api/index`,
         '/api/test',
-        '/api/faults'
+        '/api/health', 
+        '/api/faults',
+        `${API_BASE_URL}/api/test`,
+        `${API_BASE_URL}/api/health`,
+        `${API_BASE_URL}/api/faults`
       ];
       
       let workingEndpoint = null;
