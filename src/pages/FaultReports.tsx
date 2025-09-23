@@ -3,14 +3,14 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FaultReportForm } from "@/components/FaultReportForm";
+import { API_BASE_URL } from '@/lib/api';
+import { testApiConnection } from '@/lib/test-api';
 
 export default function FaultReports() {
   const [showForm, setShowForm] = useState(false);
   const [faults, setFaults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const API_BASE_URL = 'http://localhost:3001';
   const LOCAL_FAULTS_KEY = 'localFaultReports';
 
   const readLocal = () => {
@@ -35,6 +35,20 @@ export default function FaultReports() {
   const fetchFaults = async () => {
     setLoading(true);
     setError(null);
+    
+    // Test API connection first
+    const connectionTest = await testApiConnection();
+    console.log('API Connection Test:', connectionTest);
+    
+    if (!connectionTest.success) {
+      // Fallback to local only
+      const localFaults = readLocal();
+      setFaults(localFaults);
+      setError(`Backend unreachable (${connectionTest.url}): ${connectionTest.message}`);
+      setLoading(false);
+      return;
+    }
+    
     try {
       const res = await fetch(`${API_BASE_URL}/api/faults`);
       const data = await res.json();
@@ -48,7 +62,7 @@ export default function FaultReports() {
       // Fallback to local only
       const localFaults = readLocal();
       setFaults(localFaults);
-      setError('Showing locally saved reports (backend unreachable).');
+      setError(`API Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }

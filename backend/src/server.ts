@@ -50,7 +50,7 @@ app.use('/uploads/', uploadLimiter);
 const corsOptions = {
   origin: process.env['NODE_ENV'] === 'production' 
     ? (process.env['FRONTEND_URL'] || 'http://localhost:5173')
-    : true, // allow all origins in development to avoid "Failed to fetch" from preflight
+    : true, // allow all origins in development (includes codespaces)
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

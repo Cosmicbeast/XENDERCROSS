@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
-const API_BASE_URL = 'http://localhost:3001';
+import { API_BASE_URL } from '@/lib/api';
 
 // Local storage helpers for offline/draft save
 const LOCAL_FAULTS_KEY = 'localFaultReports';
