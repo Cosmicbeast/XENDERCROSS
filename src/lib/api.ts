@@ -1,7 +1,12 @@
-// Auto-detect codespace URL or use localhost
+// Auto-detect deployment URL
 const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
+    
+    // Vercel deployment - use same origin
+    if (hostname.includes('vercel.app')) {
+      return window.location.origin;
+    }
     
     // GitHub Codespaces detection
     if (hostname.includes('github.dev') || hostname.includes('githubpreview.dev') || hostname.includes('app.github.dev')) {
