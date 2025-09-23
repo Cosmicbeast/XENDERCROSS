@@ -38,6 +38,10 @@
       "dest": "/api/index.ts"
     },
     {
+      "src": "/api/test",
+      "dest": "/api/test.ts"
+    },
+    {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg))",
       "dest": "/$1"
     },

@@ -36,30 +36,60 @@ export default function FaultReports() {
     setLoading(true);
     setError(null);
     
-    const connectionTest = await testApiConnection();
-    console.log('API Connection Test:', connectionTest);
-    
-    if (!connectionTest.success) {
-      const localFaults = readLocal();
-      setFaults(localFaults);
-      setError(`Backend unreachable (${connectionTest.url}): ${connectionTest.message}`);
-      setLoading(false);
-      return;
-    }
+    console.log('API_BASE_URL:', API_BASE_URL);
+    console.log('Current URL:', window.location.href);
     
     try {
-      const res = await fetch(`${API_BASE_URL}/api/faults`);
-      const data = await res.json();
-      if (!res.ok || !data?.success) {
-        throw new Error(data?.message || 'Failed to fetch fault reports');
+      // Try multiple endpoints to see what works
+      const endpoints = [
+        `${API_BASE_URL}/api/test`,
+        `${API_BASE_URL}/api/faults`,
+        `${API_BASE_URL}/api/index`,
+        '/api/test',
+        '/api/faults'
+      ];
+      
+      let workingEndpoint = null;
+      
+      for (const endpoint of endpoints) {
+        try {
+          console.log('Trying endpoint:', endpoint);
+          const res = await fetch(endpoint);
+          console.log('Response status:', res.status);
+          
+          if (res.ok) {
+            const data = await res.json();
+            console.log('Response data:', data);
+            workingEndpoint = endpoint;
+            break;
+          }
+        } catch (e) {
+          console.log('Endpoint failed:', endpoint, e);
+        }
       }
-      const backendFaults = data.data?.faults || [];
-      const localFaults = readLocal();
-      setFaults([...localFaults, ...backendFaults]);
+      
+      if (workingEndpoint) {
+        setError(`✅ API Working! Endpoint: ${workingEndpoint}`);
+        // Now try to get actual faults
+        const faultEndpoint = workingEndpoint.replace('/test', '/faults').replace('/index', '/faults');
+        try {
+          const res = await fetch(faultEndpoint);
+          const data = await res.json();
+          const backendFaults = data.data?.faults || [];
+          const localFaults = readLocal();
+          setFaults([...localFaults, ...backendFaults]);
+        } catch (e) {
+          const localFaults = readLocal();
+          setFaults(localFaults);
+        }
+      } else {
+        throw new Error('No working API endpoint found');
+      }
+      
     } catch (e) {
       const localFaults = readLocal();
       setFaults(localFaults);
-      setError(`API Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
+      setError(`❌ All endpoints failed: ${e instanceof Error ? e.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
