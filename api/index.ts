@@ -11,8 +11,8 @@ export default function handler(req: any, res: any) {
 
     const { url, method } = req;
     
-    // Health check
-    if (url === '/health' || url?.includes('/health')) {
+    // Health check - handle all health check variations
+    if (url?.includes('health')) {
       return res.json({ success: true, message: 'API is running' });
     }
     
@@ -62,13 +62,13 @@ export default function handler(req: any, res: any) {
       }
     ];
     
-    // Get all faults
-    if (url?.includes('/api/faults') && method === 'GET' && !url.includes('/api/faults/')) {
+    // Get all faults - handle both /api/faults and /faults
+    if ((url?.includes('/api/faults') || url?.includes('/faults')) && method === 'GET' && !url?.includes('/faults/')) {
       return res.json({ success: true, data: { faults: sampleFaults } });
     }
     
-    // Create fault
-    if (url?.includes('/api/faults') && method === 'POST') {
+    // Create fault - handle both /api/faults and /faults
+    if ((url?.includes('/api/faults') || url?.includes('/faults')) && method === 'POST') {
       let files = [];
       try {
         files = req.body?.files ? JSON.parse(req.body.files) : [];

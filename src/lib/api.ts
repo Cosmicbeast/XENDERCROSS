@@ -4,20 +4,11 @@ const getApiBaseUrl = () => {
   }
 
   if (typeof window !== 'undefined') {
-    const { hostname, origin } = window.location;
-
-    // Vercel deployment - use same origin
-    if (hostname.includes('vercel.app') || hostname.includes('vercel.com')) {
-      return origin;
-    }
-
-    // Local development
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:3001';
-    }
+    // Always use same origin for Vercel deployment
+    return window.location.origin;
   }
 
-  return 'http://localhost:3001';
+  return 'https://xendercross.vercel.app';
 };
 
 export const API_BASE_URL = getApiBaseUrl();

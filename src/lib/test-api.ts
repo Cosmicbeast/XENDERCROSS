@@ -4,22 +4,37 @@ export const testApiConnection = async (): Promise<{ success: boolean; message: 
   try {
     console.log('Testing API connection to:', API_BASE_URL);
     
-    const response = await fetch(`${API_BASE_URL}/health`, {
+    // Try the API endpoint that actually exists
+    const response = await fetch(`${API_BASE_URL}/api/index`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
       },
     });
     
+    // If that fails, try a simple GET to see if server responds
     if (!response.ok) {
+      const healthResponse = await fetch(`${API_BASE_URL}/api/faults`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      
+      if (healthResponse.ok) {
+        return {
+          success: true,
+          message: 'API connection successful',
+          url: API_BASE_URL
+        };
+      }
+      
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
-    const data = await response.json();
-    
     return {
       success: true,
-      message: data.message || 'API connection successful',
+      message: 'API connection successful',
       url: API_BASE_URL
     };
   } catch (error) {
