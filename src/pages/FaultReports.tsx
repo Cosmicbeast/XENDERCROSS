@@ -6,7 +6,6 @@ import { FaultReportForm } from "@/components/FaultReportForm";
 import { API_BASE_URL } from '@/lib/api';
 import { testApiConnection } from '@/lib/test-api';
 
-
 export default function FaultReports() {
   const [showForm, setShowForm] = useState(false);
   const [selectedFault, setSelectedFault] = useState<any>(null);
@@ -25,7 +24,6 @@ export default function FaultReports() {
     }
   };
 
-  // Merge backend and local faults, newest first
   const mergedFaults = useMemo(() => {
     return faults.sort((a, b) => {
       const aTime = new Date(a.createdAt || a.date || 0).getTime();
@@ -38,12 +36,10 @@ export default function FaultReports() {
     setLoading(true);
     setError(null);
     
-    // Test API connection first
     const connectionTest = await testApiConnection();
     console.log('API Connection Test:', connectionTest);
     
     if (!connectionTest.success) {
-      // Fallback to local only
       const localFaults = readLocal();
       setFaults(localFaults);
       setError(`Backend unreachable (${connectionTest.url}): ${connectionTest.message}`);
@@ -61,7 +57,6 @@ export default function FaultReports() {
       const localFaults = readLocal();
       setFaults([...localFaults, ...backendFaults]);
     } catch (e) {
-      // Fallback to local only
       const localFaults = readLocal();
       setFaults(localFaults);
       setError(`API Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
@@ -72,7 +67,6 @@ export default function FaultReports() {
 
   useEffect(() => {
     fetchFaults();
-    // Refresh when returning from form
   }, [showForm]);
 
   if (showForm) {
@@ -168,8 +162,6 @@ export default function FaultReports() {
           New Fault Report
         </Button>
       </div>
-      
-
 
       <Card>
         <CardHeader>
@@ -215,7 +207,7 @@ export default function FaultReports() {
                       </Button>
                     </div>
                   </li>
-                ))
+                ))}
               </ul>
             </div>
           )}
