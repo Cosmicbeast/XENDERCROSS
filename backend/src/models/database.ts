@@ -140,6 +140,12 @@ class DatabaseManager {
     return this.getFaultById(id)!;
   }
 
+  // Get all files across all faults
+  getAllFiles(): FaultFile[] {
+    const stmt = this.db.prepare('SELECT * FROM fault_files ORDER BY createdAt DESC');
+    return stmt.all() as FaultFile[];
+  }
+
   getFaultById(id: string): FaultReport | null {
     const stmt = this.db.prepare('SELECT * FROM faults WHERE id = ?');
     const result = stmt.get(id) as FaultReport | undefined;

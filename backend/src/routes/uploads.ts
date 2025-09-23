@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { getDatabase } from '../models/jsonDatabase';
+import { getDatabase } from '../models/database';
 import { getUploadFilePath } from '../utils/paths';
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.get('/:filename', (req, res) => {
     }
 
     // Find the file in database to get metadata
-    const fileRecord = db.getFileByName(filename);
+    const fileRecord = db.getAllFiles().find(f => f.fileName === filename);
 
     if (!fileRecord) {
       return res.status(404).json({
@@ -189,7 +189,7 @@ router.get('/info/:filename', (req, res) => {
     }
 
     // Find the file in database
-    const fileRecord = db.getFileByName(filename);
+    const fileRecord = db.getAllFiles().find(f => f.fileName === filename);
 
     if (!fileRecord) {
       return res.status(404).json({
@@ -258,7 +258,7 @@ router.delete('/:filename', (req, res) => {
     }
 
     // Find the file in database
-    const fileRecord = db.getFileByName(filename);
+    const fileRecord = db.getAllFiles().find(f => f.fileName === filename);
 
     if (!fileRecord) {
       return res.status(404).json({

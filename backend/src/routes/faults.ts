@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDatabase, FaultReport } from '../models/jsonDatabase';
+import { getDatabase, FaultReport } from '../models/database';
 import { uploadMiddleware, handleUploadError, validateFiles, cleanupUploadedFiles } from '../middleware/upload';
 import path from 'path';
 import fs from 'fs';
