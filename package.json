@@ -17,7 +17,8 @@
     "install:all": "npm install && npm run backend:install",
     "build:all": "npm run build && npm run backend:build",
     "vercel-build": "npm run build",
-    "start": "npm run preview"
+    "start": "npm run preview",
+    "build:vercel": "vite build --outDir dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

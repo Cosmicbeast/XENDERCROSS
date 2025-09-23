@@ -23,15 +23,12 @@
       "dest": "/api/index.ts"
     },
     {
-      "src": "/uploads/(.*)",
-      "dest": "/api/index.ts"
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FaultReportForm } from "@/components/FaultReportForm";
 import { API_BASE_URL } from '@/lib/api';
 import { testApiConnection } from '@/lib/test-api';
-import { ApiDebug } from '@/components/ApiDebug';
+
 
 export default function FaultReports() {
   const [showForm, setShowForm] = useState(false);
@@ -111,7 +111,7 @@ export default function FaultReports() {
         </Button>
       </div>
       
-      <ApiDebug />
+
 
       <Card>
         <CardHeader>
