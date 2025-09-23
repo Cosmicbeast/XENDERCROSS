@@ -16,7 +16,8 @@
     "dev:full": "concurrently \"npm run dev\" \"npm run backend:dev\"",
     "install:all": "npm install && npm run backend:install",
     "build:all": "npm run build && npm run backend:build",
-    "vercel-build": "npm run build"
+    "vercel-build": "npm run build",
+    "start": "npm run preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

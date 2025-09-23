@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Request, Response } from 'express';
 import { getDatabase, FaultReport } from '../models/jsonDatabase';
 import { uploadMiddleware, handleUploadError, validateFiles, cleanupUploadedFiles } from '../middleware/upload';
 import fs from 'fs';
@@ -6,7 +7,7 @@ import fs from 'fs';
 const router = express.Router();
 const db = getDatabase();
 
-const validateFaultData = (data: any): { isValid: boolean; errors: string[] } => {
+const validateFaultData = (data: Partial<FaultReport> & Record<string, unknown>): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
   
   if (!data.title || typeof data.title !== 'string' || data.title.trim().length === 0) {
@@ -32,7 +33,7 @@ const validateFaultData = (data: any): { isValid: boolean; errors: string[] } =>
   return { isValid: errors.length === 0, errors };
 };
 
-router.post('/', uploadMiddleware.any(), (req, res) => {
+router.post('/', uploadMiddleware.any(), (req: Request, res: Response) => {
   try {
     const files = Array.isArray(req.files) ? (req.files as Express.Multer.File[]) : [];
     
@@ -48,7 +49,7 @@ router.post('/', uploadMiddleware.any(), (req, res) => {
       return res.status(400).json({ success: false, message: 'File validation failed', errors: fileValidation.errors });
     }
 
-    const convertToBoolean = (value: any): boolean => {
+    const convertToBoolean = (value: unknown): boolean => {
       if (typeof value === 'boolean') return value;
       if (typeof value === 'string') return value.toLowerCase() === 'true' || value === '1';
       return false;
@@ -100,14 +101,25 @@ router.post('/', uploadMiddleware.any(), (req, res) => {
     });
 
   } catch (error) {
-    const files = req.files as Express.Multer.File[] || [];
+    const files = (req.files as Express.Multer.File[]) || [];
     cleanupUploadedFiles(files);
     console.error('Error creating fault report:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }, handleUploadError);
 
-router.get('/:id', (req, res) => {
+// Place stats route BEFORE dynamic :id to avoid shadowing
+router.get('/stats/summary', (req: Request, res: Response) => {
+  try {
+    const stats = db.getFaultStats();
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    console.error('Error fetching fault statistics:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
+router.get('/:id', (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
@@ -129,11 +141,11 @@ router.get('/:id', (req, res) => {
   }
 });
 
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response) => {
   try {
-    const limit = parseInt(req.query.limit as string) || 50;
-    const offset = parseInt(req.query.offset as string) || 0;
-    const search = req.query.search as string;
+    const limit = parseInt((req.query['limit'] as string) || '50');
+    const offset = parseInt((req.query['offset'] as string) || '0');
+    const search = (req.query['search'] as string) || '';
 
     if (limit < 1 || limit > 100) {
       return res.status(400).json({ success: false, message: 'Limit must be between 1 and 100' });
@@ -147,11 +159,11 @@ router.get('/', (req, res) => {
 
     if (search && search.trim().length > 0) {
       const filters = {
-        severity: req.query.severity as string,
-        assetId: req.query.assetId as string,
-        category: req.query.category as string,
-        dateFrom: req.query.dateFrom as string,
-        dateTo: req.query.dateTo as string
+        severity: req.query['severity'] as string,
+        assetId: req.query['assetId'] as string,
+        category: req.query['category'] as string,
+        dateFrom: req.query['dateFrom'] as string,
+        dateTo: req.query['dateTo'] as string
       };
       faults = db.searchFaults(search.trim(), filters);
     } else {
@@ -177,7 +189,7 @@ router.get('/', (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
@@ -198,10 +210,11 @@ router.put('/:id', (req, res) => {
       'supervisorNotified', 'escalationNeeded'
     ];
 
-    const updates: any = {};
+    const updates: Partial<Omit<FaultReport, 'id' | 'createdAt' | 'updatedAt'>> = {};
     Object.keys(req.body).forEach(key => {
       if (allowedFields.includes(key)) {
-        updates[key] = req.body[key];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (updates as any)[key] = (req.body as Record<string, unknown>)[key] as unknown;
       }
     });
 
@@ -224,7 +237,7 @@ router.put('/:id', (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
@@ -257,14 +270,6 @@ router.delete('/:id', (req, res) => {
   }
 });
 
-router.get('/stats/summary', (req, res) => {
-  try {
-    const stats = db.getFaultStats();
-    res.json({ success: true, data: stats });
-  } catch (error) {
-    console.error('Error fetching fault statistics:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-});
+// (moved above)
 
 export default router;

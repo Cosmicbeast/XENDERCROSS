@@ -17,6 +17,7 @@ dotenv.config();
 
 const app = express();
 const PORT = Number(process.env['PORT'] || 3001);
+const isServerless = Boolean(process.env['VERCEL'] || process.env['AWS_LAMBDA_FUNCTION_VERSION']);
 
 // Security middleware
 app.use(helmet({
@@ -48,8 +49,11 @@ app.use('/uploads/', uploadLimiter);
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env['NODE_ENV'] === 'production' 
-    ? (process.env['FRONTEND_URL'] || 'http://localhost:5173')
+  origin: process.env['NODE_ENV'] === 'production'
+    ? (
+        // In serverless/Vercel, reflect request origin to allow same-origin frontend
+        isServerless ? true : (process.env['FRONTEND_URL'] || 'http://localhost:5173')
+      )
     : true, // allow all origins in development (includes codespaces)
   credentials: true,
   optionsSuccessStatus: 200,
@@ -93,7 +97,7 @@ app.get('/health', (req, res) => {
 app.use('/api/faults', faultsRouter);
 app.use('/uploads', uploadsRouter);
 // Also expose static files from uploads for local usage
-app.use('/uploads', express.static(getUploadsDir()))
+app.use('/uploads', express.static(getUploadsDir()));
 
 // API documentation endpoint
 app.get('/api/docs', (req, res) => {
@@ -236,17 +240,19 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 XENDERCROSS Backend API Server running on port ${PORT}`);
-  console.log(`📱 Health check: http://localhost:${PORT}/health`);
-  console.log(`📚 API docs: http://localhost:${PORT}/api/docs`);
-  console.log(`🌍 Environment: ${process.env['NODE_ENV'] || 'development'}`);
-  
-  if (process.env['NODE_ENV'] !== 'production') {
-    console.log(`🔧 Frontend CORS origin: ${corsOptions.origin}`);
-  }
-});
+// Start server only when not running in a serverless environment (e.g., Vercel)
+if (!isServerless) {
+  app.listen(PORT, () => {
+    console.log(`🚀 XENDERCROSS Backend API Server running on port ${PORT}`);
+    console.log(`📱 Health check: http://localhost:${PORT}/health`);
+    console.log(`📚 API docs: http://localhost:${PORT}/api/docs`);
+    console.log(`🌍 Environment: ${process.env['NODE_ENV'] || 'development'}`);
+    
+    if (process.env['NODE_ENV'] !== 'production') {
+      console.log(`🔧 Frontend CORS origin: ${corsOptions.origin}`);
+    }
+  });
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
