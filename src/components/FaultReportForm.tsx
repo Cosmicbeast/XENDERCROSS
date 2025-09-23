@@ -13,6 +13,59 @@ import { useToast } from "@/hooks/use-toast";
 
 const API_BASE_URL = 'http://localhost:3001';
 
+// Local storage helpers for offline/draft save
+const LOCAL_FAULTS_KEY = 'localFaultReports';
+type LocalFaultReport = {
+  id: string;
+  title: string;
+  description: string;
+  reporter: string;
+  date: string;
+  severity: string;
+  assetId: string;
+  subsystem?: string;
+  location?: string;
+  category?: string;
+  observedCause?: string;
+  diagnosticSteps?: boolean;
+  rootCauseKnown?: boolean;
+  rootCauseDetails?: string;
+  workaround?: string;
+  temporaryFix?: boolean;
+  temporaryFixDetails?: string;
+  passengerSafety?: boolean;
+  staffSafety?: boolean;
+  sparePartsRequired?: boolean;
+  sparePartsList?: string;
+  estimatedRepairTime?: string;
+  supervisorNotified?: boolean;
+  escalationNeeded?: boolean;
+  createdAt: string;
+  updatedAt: string;
+  // Files are not stored locally to avoid bloating localStorage
+};
+
+const generateLocalId = () => `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+const readLocalFaultReports = (): LocalFaultReport[] => {
+  try {
+    const raw = localStorage.getItem(LOCAL_FAULTS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeLocalFaultReports = (items: LocalFaultReport[]) => {
+  try {
+    localStorage.setItem(LOCAL_FAULTS_KEY, JSON.stringify(items));
+  } catch {
+    // ignore storage errors
+  }
+};
+
 interface UploadedFile {
   file: File;
   preview?: string;
@@ -181,10 +234,10 @@ export function FaultReportForm() {
         body: formData,
       });
       
-      const result = await response.json();
+      const result = await response.json().catch(() => ({ success: false }));
       
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to submit fault report');
+      if (!response.ok || !result?.success) {
+        throw new Error((result && result.message) || 'Failed to submit fault report');
       }
       
       // Success
@@ -227,11 +280,71 @@ export function FaultReportForm() {
       
     } catch (error) {
       console.error('Error submitting fault report:', error);
+      // Save locally as fallback (draft-like) when network or server fails
+      const nowIso = new Date().toISOString();
+      const localItem: LocalFaultReport = {
+        id: generateLocalId(),
+        title: reportData.title || `Fault Report - ${reportData.assetId || 'Unknown'} - ${new Date().toLocaleDateString()}`,
+        description: reportData.description,
+        reporter: reportData.reporter,
+        date: nowIso,
+        severity: reportData.severity || 'minor',
+        assetId: reportData.assetId,
+        subsystem: reportData.subsystem || undefined,
+        location: reportData.location || undefined,
+        category: reportData.category || undefined,
+        observedCause: reportData.observedCause || undefined,
+        diagnosticSteps: !!reportData.diagnosticSteps,
+        rootCauseKnown: !!reportData.rootCauseKnown,
+        rootCauseDetails: reportData.rootCauseDetails || undefined,
+        workaround: reportData.workaround || undefined,
+        temporaryFix: !!reportData.temporaryFix,
+        temporaryFixDetails: reportData.temporaryFixDetails || undefined,
+        passengerSafety: !!reportData.passengerSafety,
+        staffSafety: !!reportData.staffSafety,
+        sparePartsRequired: !!reportData.sparePartsRequired,
+        sparePartsList: reportData.sparePartsList || undefined,
+        estimatedRepairTime: reportData.estimatedRepairTime || undefined,
+        supervisorNotified: !!reportData.supervisorNotified,
+        escalationNeeded: !!reportData.escalationNeeded,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      };
+      const existing = readLocalFaultReports();
+      writeLocalFaultReports([localItem, ...existing]);
       toast({
-        title: "Submission Error",
-        description: error instanceof Error ? error.message : "Failed to submit fault report. Please try again.",
-        variant: "destructive",
+        title: isDraftSubmission ? 'Draft Saved Locally' : 'Saved Locally',
+        description: 'Network/API unavailable. Your report was saved to this device and will appear in the list.',
       });
+      // Reset form after local save too
+      setReportData({
+        title: "",
+        assetId: "",
+        subsystem: "",
+        location: "",
+        category: "",
+        severity: "",
+        description: "",
+        observedCause: "",
+        diagnosticSteps: false,
+        rootCauseKnown: false,
+        rootCauseDetails: "",
+        workaround: "",
+        temporaryFix: false,
+        temporaryFixDetails: "",
+        passengerSafety: false,
+        staffSafety: false,
+        sparePartsRequired: false,
+        sparePartsList: "",
+        estimatedRepairTime: "",
+        reporter: "",
+        supervisorNotified: false,
+        escalationNeeded: false,
+      });
+      uploadedFiles.forEach(({ preview }) => {
+        if (preview) URL.revokeObjectURL(preview);
+      });
+      setUploadedFiles([]);
     } finally {
       setIsSubmitting(false);
       setIsDraft(false);

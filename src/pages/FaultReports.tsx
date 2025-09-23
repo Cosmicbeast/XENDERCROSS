@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +6,58 @@ import { FaultReportForm } from "@/components/FaultReportForm";
 
 export default function FaultReports() {
   const [showForm, setShowForm] = useState(false);
+  const [faults, setFaults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const API_BASE_URL = 'http://localhost:3001';
+  const LOCAL_FAULTS_KEY = 'localFaultReports';
+
+  const readLocal = () => {
+    try {
+      const raw = localStorage.getItem(LOCAL_FAULTS_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      return [];
+    }
+  };
+
+  // Merge backend and local faults, newest first
+  const mergedFaults = useMemo(() => {
+    return faults.sort((a, b) => {
+      const aTime = new Date(a.createdAt || a.date || 0).getTime();
+      const bTime = new Date(b.createdAt || b.date || 0).getTime();
+      return bTime - aTime;
+    });
+  }, [faults]);
+
+  const fetchFaults = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/faults`);
+      const data = await res.json();
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || 'Failed to fetch fault reports');
+      }
+      const backendFaults = data.data?.faults || [];
+      const localFaults = readLocal();
+      setFaults([...localFaults, ...backendFaults]);
+    } catch (e) {
+      // Fallback to local only
+      const localFaults = readLocal();
+      setFaults(localFaults);
+      setError('Showing locally saved reports (backend unreachable).');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFaults();
+    // Refresh when returning from form
+  }, [showForm]);
 
   if (showForm) {
     return (
@@ -52,15 +104,42 @@ export default function FaultReports() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8">
-            <p className="text-muted-foreground mb-4">
-              No fault reports to display. Click the button above to create your first report.
-            </p>
-            <Button onClick={() => setShowForm(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Fault Report
-            </Button>
-          </div>
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Loading reports...</p>
+            </div>
+          ) : mergedFaults.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-4">
+                No fault reports to display. Click the button above to create your first report.
+              </p>
+              <Button onClick={() => setShowForm(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Fault Report
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {error && (
+                <p className="text-sm text-yellow-600">{error}</p>
+              )}
+              <ul className="divide-y">
+                {mergedFaults.map((f) => (
+                  <li key={f.id} className="py-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">
+                          {f.title} {String(f.id).startsWith('local_') && <span className="ml-2 text-xs text-muted-foreground">(Local)</span>}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {f.assetId} • {f.severity} • {new Date(f.createdAt || f.date).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </li>) )}
+              </ul>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
