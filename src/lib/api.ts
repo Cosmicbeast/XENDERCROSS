@@ -1,14 +1,11 @@
 const getApiBaseUrl = () => {
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
-  }
-
+  // Prefer same-origin in the browser for both dev (Vite proxy) and prod (Vercel)
   if (typeof window !== 'undefined') {
-    // Always use same origin for Vercel deployment
     return window.location.origin;
   }
 
-  return 'https://xendercross.vercel.app';
+  // Fallback for non-browser contexts (e.g., SSR/build tools)
+  return import.meta.env.VITE_API_BASE_URL || 'https://xendercross.vercel.app';
 };
 
 export const API_BASE_URL = getApiBaseUrl();
